@@ -15,7 +15,7 @@ Location.extend(HashLocation, {
 
   set url(value) {
     if (value.charAt(0) === '.' || value.split('//').length > 1) {
-      value = this.getRelativePath(this.currentUrl, value);
+      value = this.getRelativeUrl(value);
     }
 
     location.hash = (value === '/' ? '' : '#' + value);

@@ -27,7 +27,7 @@ Location.extend(PushLocation, {
 
   set url(value) {
     if (value.charAt(0) === '.' || value.split('//').length > 1) {
-      value = this.getRelativePath(value);
+      value = this.getRelativeUrl(value);
     } else {
       value = (this.options.prefix || '') + value;
     }

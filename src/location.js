@@ -36,16 +36,18 @@ EventTarget.extend(Location, {
   base: base,
   anchor: anchor,
 
-  getRelativePath: function(basePath, relativeURI) {
-    if (arguments.length === 1) {
-      relativeURI = basePath;
-      base.href = location.href;
-    } else {
-      base.href = domain + basePath;
-    }
+  getRelativeUrl: function(url) {
+    base.href = domain + this.currentUrl;
+    anchor.href = url;
+    url = anchor.pathname + anchor.search;
+    // Fix IE's missing slash prefix
+    return (url[0] === '/') ? url : '/' + url;
+  },
 
-    anchor.href = relativeURI;
-    var path = anchor.pathname + anchor.search;
+  getPath: function(url) {
+    base.href = domain + this.currentUrl;
+    anchor.href = url;
+    var path = anchor.pathname;
     // Fix IE's missing slash prefix
     return (path[0] === '/') ? path : '/' + path;
   },

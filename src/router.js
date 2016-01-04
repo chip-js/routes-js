@@ -13,7 +13,7 @@ function Router(options) {
   this.params = {};
   this.paramsExp = {};
   this.location = Location.create(this.options);
-  this.location.addEventListener('change', this.onURIChange.bind(this));
+  this.location.addEventListener('change', this.onUrlChange.bind(this));
 }
 
 
@@ -76,10 +76,11 @@ EventTarget.extend(Router, {
   },
 
 
-  getRoutesMatchingPath: function(path) {
-    if (path == null) {
+  getRoutesMatchingPath: function(url) {
+    if (url == null) {
       return [];
     }
+    var path = this.location.getPath(url);
     var paramsExp = this.paramsExp;
 
     return this.routes.filter(function(route) {
@@ -96,7 +97,7 @@ EventTarget.extend(Router, {
   },
 
 
-  onURIChange: function(event) {
+  onUrlChange: function(event) {
     var urlParts = event.detail.url.split('?');
     var path = urlParts.shift();
     var query = urlParts.join('?');

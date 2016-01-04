@@ -3,22 +3,26 @@ var PushLocation = require('../src/push-location');
 describe('Location', function() {
   var location = new PushLocation();
 
-  describe('getRelativePath', function() {
+  describe('getRelativeUrl', function() {
 
     it('should get a relative sibling URL', function() {
-      expect(location.getRelativePath('/test/foo/bar', 'thing')).to.equal('/test/foo/thing');
+      location.currentUrl = '/test/foo/bar';
+      expect(location.getRelativeUrl('thing')).to.equal('/test/foo/thing');
     });
 
     it('should get a relative parent URL', function() {
-      expect(location.getRelativePath('/test/foo/bar', '../thing')).to.equal('/test/thing');
+      location.currentUrl = '/test/foo/bar';
+      expect(location.getRelativeUrl('../thing')).to.equal('/test/thing');
     });
 
     it('should get a relative root URL', function() {
-      expect(location.getRelativePath('/test/foo/bar', '/thing')).to.equal('/thing');
+      location.currentUrl = '/test/foo/bar';
+      expect(location.getRelativeUrl('/thing?test')).to.equal('/thing?test');
     });
 
     it('should get an absolute URL', function() {
-      expect(location.getRelativePath('/test/foo/bar', 'http://example.com/thing')).to.equal('/thing');
+      location.currentUrl = '/test/foo/bar';
+      expect(location.getRelativeUrl('http://example.com/thing')).to.equal('/thing');
     });
 
   });
