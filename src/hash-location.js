@@ -3,12 +3,13 @@ var Location = require('./location');
 
 
 // Location implementation for using the URL hash
-function HashLocation(options) {
-  Location.call(this, options);
-  this.historyEventName = 'hashchange';
+function HashLocation() {
+  Location.call(this);
 }
 
 Location.extend(HashLocation, {
+  historyEventName: 'hashchange',
+
   get url() {
     return location.hash.replace(/^#\/?/, '/') || '/';
   },

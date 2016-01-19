@@ -3,10 +3,8 @@ var Location = require('./location');
 var uriParts = document.createElement('a');
 
 // Location implementation for using pushState
-function PushLocation(options) {
-  Location.call(this, options);
-  this.options = options || {};
-  this.historyEventName = 'popstate';
+function PushLocation() {
+  Location.call(this);
 }
 
 Location.extend(PushLocation, {
@@ -16,20 +14,15 @@ Location.extend(PushLocation, {
     }
   },
 
+  historyEventName: 'popstate',
+
   get url() {
-    var prefix = this.options.prefix;
-    var path = location.pathname;
-    if (prefix && path.indexOf(prefix) === 0) {
-      path = path.replace(prefix, '');
-    }
-    return path + location.search;
+    return location.href.replace(this.baseURI, '').split('#').shift();
   },
 
   set url(value) {
     if (value.charAt(0) === '.' || value.split('//').length > 1) {
       value = this.getRelativeUrl(value);
-    } else {
-      value = (this.options.prefix || '') + value;
     }
 
     if (this.currentUrl !== value) {

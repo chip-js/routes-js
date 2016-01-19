@@ -41,24 +41,40 @@ router.route('/users/:userId', function(req) {
 When creating a router options may be passed in the form of an object hash to customize your router.
 
  * `use` Use to force your router to use hash-based routing by setting it to `hash`.
- * `prefix` Defines the URL prefix to your routes, used to host an application at a location in your domain other than
-   the root. For example, if your app exists at `example.com/mortgage/calculator/` then you would set the prefix to
-   `/mortgage/calculator` and a route of `/` would go to `example.com/mortgage/calculator/` while a route of `/step2`
-   would go to `example.com/mortgage/calculator/step2`.
 
 A router will use [History.pushState](https://developer.mozilla.org/en-US/docs/Web/API/History/pushState) by default,
 falling back to hash-based routing (using the URL hash as in `index.html#/my/path`) when the browser does not support
-`pushState`. Your web server needs to be able to deliver your app's HTML at any URL the application uses (underneath
-the prefix if used). If your server does not handle this (e.g. if it is hosted from a static file server) you should set
-your router to use hash-based routing.
+`pushState`. Your web server needs to be able to deliver your app's HTML at any URL the application uses. If your server
+does not handle this (e.g. if it is hosted from a static file server) you should set your router to use hash-based
+routing.
 
 ```js
 // a prefix isn't needed in hash-based routing
 var router = require('routes-js').create({ use: 'hash' });
 
-// a prefix is useful in pushState routing when the app is not at the root
-var router = require('routes-js').create({ prefix: '/my-app' });
+// pushState routing
+var router = require('routes-js').create();
 ```
+
+#### Hosting the App Somewhere Other Than the Root
+
+Often an application is not hosted at the root URL of a page. When this is the case you don't want to have to use the
+full path in your routes. You can easily solve this by putting the root of your app in a `<base>` element on your page.
+For example, if your app exists at `http://example.com/mortgage/calculator/` then you would add a base element like the
+following to your app HTML page.
+
+```html
+<html>
+<head>
+<base href="/mortgage/calculator">
+</head>
+<body>
+  <app-element></app-element>
+</body>
+```
+
+A route of `/` would go to `http://example.com/mortgage/calculator/` while a route of `/step2` would go to
+`http://example.com/mortgage/calculator/step2`. Note that this is not needed for hash-based routing.
 
 #### Routes
 

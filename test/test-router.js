@@ -5,6 +5,11 @@ describe('Router', function() {
 
   beforeEach(function() {
     router = new Router();
+    router.listen();
+  });
+
+  afterEach(function() {
+    router.stop();
   });
 
 

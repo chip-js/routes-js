@@ -3,28 +3,29 @@ var EventTarget = require('chip-utils/event-target');
 var doc = document.implementation.createHTMLDocument('');
 var base = doc.createElement('base');
 var anchor = doc.createElement('a');
-var domain = location.protocol + '//' + location.host;
-var PushLocation;
-var HashLocation;
+var bases = document.getElementsByTagName('base');
+var baseURI = bases[0] ? bases[0].href : location.protocol + '//' + location.host + '/';
+var PushLocation, pushLocation;
+var HashLocation, hashLocation;
 doc.body.appendChild(base);
 doc.body.appendChild(anchor);
 
 
-function Location(options) {
+function Location() {
   EventTarget.call(this);
-  this.options = options || {};
   this._handleChange = this._handleChange.bind(this);
+  this.baseURI = baseURI.replace(/\/$/, '');
   this.currentUrl = this.url;
-  this.historyEventName = '';
+  window.addEventListener(this.historyEventName, this._handleChange);
 }
 
 EventTarget.extend(Location, {
   static: {
     create: function(options) {
       if (options.use === 'hash' || !PushLocation.supported) {
-        return new HashLocation(options);
+        return hashLocation || (hashLocation = new HashLocation());
       } else {
-        return new PushLocation(options);
+        return pushLocation || (pushLocation = new PushLocation());
       }
     },
 
@@ -33,11 +34,12 @@ EventTarget.extend(Location, {
     }
   },
 
+  historyEventName: '',
   base: base,
   anchor: anchor,
 
   getRelativeUrl: function(url) {
-    base.href = domain + this.currentUrl;
+    base.href = this.baseURI + this.currentUrl;
     anchor.href = url;
     url = anchor.pathname + anchor.search;
     // Fix IE's missing slash prefix
@@ -45,7 +47,7 @@ EventTarget.extend(Location, {
   },
 
   getPath: function(url) {
-    base.href = domain + this.currentUrl;
+    base.href = this.baseURI + this.currentUrl;
     anchor.href = url;
     var path = anchor.pathname;
     // Fix IE's missing slash prefix
@@ -58,14 +60,6 @@ EventTarget.extend(Location, {
 
   set url(value) {
     throw new Error('Abstract method. Override');
-  },
-
-  listen: function() {
-    window.addEventListener(this.historyEventName, this._handleChange);
-  },
-
-  stop: function() {
-    window.removeEventListener(this.historyEventName, this._handleChange);
   },
 
   _changeTo: function(url) {

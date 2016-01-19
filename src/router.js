@@ -12,8 +12,9 @@ function Router(options) {
   this.routes = [];
   this.params = {};
   this.paramsExp = {};
+  this.routes.byPath = {};
   this.location = Location.create(this.options);
-  this.location.addEventListener('change', this.onUrlChange.bind(this));
+  this.onUrlChange = this.onUrlChange.bind(this);
 }
 
 
@@ -28,7 +29,6 @@ EventTarget.extend(Router, {
     } else {
       throw new TypeError('param must have a callback of type "function" or RegExp. Got ' + callback + '.');
     }
-    return this;
   },
 
 
@@ -46,7 +46,16 @@ EventTarget.extend(Router, {
       path = '/' + path;
     }
     this.routes.push(new Route(path, callback));
-    return this;
+  },
+
+
+  removeRoute: function(path, callback) {
+    return this.routes.some(function(route, index) {
+      if (route.path === path && route.callback === callback) {
+        this.routes.splice(index, 1);
+        return true;
+      }
+    });
   },
 
 
@@ -65,14 +74,12 @@ EventTarget.extend(Router, {
 
 
   listen: function() {
-    this.location.listen();
-    return this;
+    this.location.on('change', this.onUrlChange);
   },
 
 
   stop: function() {
-    this.location.stop();
-    return this;
+    this.location.off('change', this.onUrlChange);
   },
 
 
@@ -149,7 +156,6 @@ EventTarget.extend(Router, {
 
     // Start running the callbacks, one by one
     next();
-    return this;
   }
 
 });

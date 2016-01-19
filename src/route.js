@@ -77,6 +77,7 @@ function parsePath(path, keys) {
       return expr;
     })
     .replace(/([\/.])/g, '\\$1')
-    .replace(/\*/g, '(.*)');
+    .replace(/\(\\\/\*\)/g, '(/.*)') // replace the (\/*)? with (\/.*)?
+    .replace(/\*(?!\))/g, '(.*)'); // any other * to (.*)
   return new RegExp('^' + path + '$', 'i');
 }

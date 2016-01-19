@@ -3,7 +3,6 @@ var HashLocation = require('../src/hash-location');
 
 describe('HashLocation', function() {
   var location = new HashLocation();
-  location.listen();
 
   describe('path', function() {
 

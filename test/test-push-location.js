@@ -3,7 +3,6 @@ var PushLocation = require('../src/push-location');
 
 describe('PushLocation', function() {
   var location = new PushLocation();
-  location.listen();
 
 
   describe('path', function() {

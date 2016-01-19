@@ -1,6 +1,6 @@
 {
   "name": "routes-js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A front-end/web JavaScript routing library for simplifying routing via pushState or hashes.",
   "license": "MIT",
   "repository": {
