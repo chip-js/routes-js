@@ -62,9 +62,21 @@ EventTarget.extend(Location, {
     throw new Error('Abstract method. Override');
   },
 
+  get path() {
+    return this.currentUrl.split('?').shift();
+  },
+
+  get query() {
+    return parseQuery(this.currentUrl.split('?').slice(1).join('?'));
+  },
+
   _changeTo: function(url) {
     this.currentUrl = url;
-    this.dispatchEvent(new CustomEvent('change', { detail: { url: url }}));
+    this.dispatchEvent(new CustomEvent('change', { detail: {
+      url: url,
+      path: this.path,
+      query: this.query
+    }}));
   },
 
   _handleChange: function() {
@@ -74,6 +86,21 @@ EventTarget.extend(Location, {
     }
   }
 });
+
+
+// Parses a location.search string into an object with key-value pairs.
+function parseQuery(search) {
+  var query = {};
+
+  search.replace(/^\?/, '').split('&').filter(Boolean).forEach(function(keyValue) {
+    var parts = keyValue.split('=');
+    var key = parts[0];
+    var value = parts[1];
+    query[decodeURIComponent(key)] = decodeURIComponent(value);
+  });
+
+  return query;
+}
 
 PushLocation = require('./push-location');
 HashLocation = require('./hash-location');

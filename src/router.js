@@ -105,10 +105,9 @@ EventTarget.extend(Router, {
 
 
   onUrlChange: function(event) {
-    var urlParts = event.detail.url.split('?');
-    var path = urlParts.shift();
-    var query = urlParts.join('?');
-    var req = { url: event.detail.url, path: path, query: parseQuery(query) };
+    var path = event.detail.path;
+    var query = event.detail.query;
+    var req = { url: event.detail.url, path: path, query: query };
     var paramsCalled = {};
 
     var event = new CustomEvent('changing', { detail: req, cancelable: true });
@@ -159,21 +158,3 @@ EventTarget.extend(Router, {
   }
 
 });
-
-
-// Parses a location.search string into an object with key-value pairs.
-function parseQuery(search) {
-  var query = {};
-  if (search === '') {
-    return query;
-  }
-
-  search.replace(/^\?/, '').split('&').forEach(function(keyValue) {
-    var parts = keyValue.split('=');
-    var key = parts[0];
-    var value = parts[1];
-    query[decodeURIComponent(key)] = decodeURIComponent(value);
-  });
-
-  return query;
-}
