@@ -105,9 +105,8 @@ EventTarget.extend(Router, {
 
 
   onUrlChange: function(event) {
-    var path = event.detail.path;
-    var query = event.detail.query;
-    var req = { url: event.detail.url, path: path, query: query };
+    var req = event.detail;
+    var path = req.path;
     var paramsCalled = {};
 
     var event = new CustomEvent('changing', { detail: req, cancelable: true });
