@@ -54,6 +54,10 @@ EventTarget.extend(Location, {
     return (path[0] === '/') ? path : '/' + path;
   },
 
+  redirect: function(url, replace) {
+    this.url = url;
+  },
+
   get url() {
     throw new Error('Abstract method. Override');
   },

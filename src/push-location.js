@@ -16,19 +16,23 @@ Location.extend(PushLocation, {
 
   historyEventName: 'popstate',
 
-  get url() {
-    return location.href.replace(this.baseURI, '').split('#').shift();
-  },
-
-  set url(value) {
+  redirect: function(value, replace) {
     if (value.charAt(0) !== '/' || value.split('//').length > 1) {
       value = this.getRelativeUrl(value);
     }
 
     if (this.currentUrl !== value) {
-      history.pushState({}, '', value);
+      replace ? history.replaceState({}, '', value) : history.pushState({}, '', value);
       // Manually change since no event is dispatched when using pushState/replaceState
       this._changeTo(value);
     }
+  },
+
+  get url() {
+    return location.href.replace(this.baseURI, '').split('#').shift();
+  },
+
+  set url(value) {
+    this.redirect(value);
   }
 });
