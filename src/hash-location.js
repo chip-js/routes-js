@@ -10,6 +10,18 @@ function HashLocation() {
 Location.extend(HashLocation, {
   historyEventName: 'hashchange',
 
+  redirect: function(value, replace) {
+    if (replace && window.history && window.history.replaceState) {
+      if (value.charAt(0) !== '/' || value.split('//').length > 1) {
+        value = this.getRelativeUrl(value);
+      }
+      history.replaceState({}, '', '#' + value);
+      this._changeTo(value);
+    } else {
+      this.url = value;
+    }
+  },
+
   get url() {
     return location.hash.replace(/^#\/?/, '/') || '/';
   },
