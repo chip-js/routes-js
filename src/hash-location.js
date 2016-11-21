@@ -16,7 +16,7 @@ Location.extend(HashLocation, {
         value = this.getRelativeUrl(value);
       }
       history.replaceState({}, '', '#' + value);
-      this._changeTo(value);
+      this._changeTo(value, replace);
     } else {
       this.url = value;
     }

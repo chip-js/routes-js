@@ -24,7 +24,7 @@ Location.extend(PushLocation, {
     if (this.currentUrl !== value) {
       replace ? history.replaceState({}, '', value) : history.pushState({}, '', value);
       // Manually change since no event is dispatched when using pushState/replaceState
-      this._changeTo(value);
+      this._changeTo(value, replace);
     }
   },
 

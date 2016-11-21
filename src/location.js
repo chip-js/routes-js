@@ -74,12 +74,13 @@ EventTarget.extend(Location, {
     return parseQuery(this.currentUrl.split('?').slice(1).join('?'));
   },
 
-  _changeTo: function(url) {
+  _changeTo: function(url, replace) {
     this.currentUrl = url;
     this.dispatchEvent(new CustomEvent('change', { detail: {
       url: url,
       path: this.path,
-      query: this.query
+      query: this.query,
+      replace: replace || false
     }}));
   },
 
